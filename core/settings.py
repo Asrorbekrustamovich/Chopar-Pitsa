@@ -34,7 +34,14 @@ CACHES = {
     }
 }
 # Application definition
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT autentifikatsiya
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # Hamma API'lar default bo‘lib ochiq
+    ),
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,7 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'Authorizatsiya',
+    'Product',
 ]
+AUTH_USER_MODEL = "Authorizatsiya.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

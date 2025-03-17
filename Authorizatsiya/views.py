@@ -54,9 +54,12 @@ def registratsiya(request):
         if not phone:
             return JsonResponse({'error': 'Phone number is required.'}, status=400)
 
-        is_first_time = not User.objects.filter(phone=phone).exists()
+        user = User.objects.filter(phone=phone).first()
 
-        if is_first_time and (not name or not birthdate):
+        if user:
+            return JsonResponse({'error': 'User is already registered. Please log in.'}, status=400)
+
+        if not name or not birthdate:
             return JsonResponse({'error': 'Name and birthdate are required for first-time registration.'}, status=400)
 
         cached_otp = cache.get(phone)  # Cache'dan OTP ni olish
@@ -66,21 +69,12 @@ def registratsiya(request):
         if code != cached_otp:
             return JsonResponse({'error': 'Invalid OTP. Please try again.'}, status=400)
 
-        # Agar foydalanuvchi avval ro‘yxatdan o‘tgan bo‘lsa
-        user = User.objects.filter(phone=phone).first()
-        if user:
-            refresh = RefreshToken.for_user(user)
-            token = str(refresh.access_token)
-            return JsonResponse({'message': 'OTP verified successfully.', 'token': token})
-
-        # Agar foydalanuvchi yangi bo‘lsa, uni yaratamiz
+        # Yangi foydalanuvchini yaratish
         user = User.objects.create(
             phone=phone,
             name=name,
             birthdate=birthdate
         )
-        user.set_password(code)  # OTP ni vaqtinchalik parol sifatida saqlash
-        user.save()
 
         refresh = RefreshToken.for_user(user)
         token = str(refresh.access_token)

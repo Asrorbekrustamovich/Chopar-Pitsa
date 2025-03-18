@@ -45,7 +45,6 @@ urlpatterns = [
     path("orders/<int:pk>/", OrderRetrieveUpdateDeleteView.as_view()),
 
     # Order Items
-    path("order-items/", OrderItemListCreateView.as_view()),
     path("order-items/<int:pk>/", OrderItemRetrieveUpdateDeleteView.as_view()),
 
     # Order Additional Items

@@ -40,7 +40,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)  # User ning faqat ismi chiqadi
+    user = serializers.StringRelatedField(read_only=True)  
     items = OrderItemSerializer(many=True, read_only=True)  
 
     class Meta:

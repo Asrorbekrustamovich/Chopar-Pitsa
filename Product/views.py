@@ -2,9 +2,14 @@ from django.shortcuts import render
 
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from .models import Order, OrderItem, OrderAdditionalItem, Product
-from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalItemSerializer,ProductSerializer
+from .models import Order, OrderItem, OrderAdditionalItem, Product, Banner
+from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalItemSerializer,ProductSerializer,BannerSerializer
 
+
+class BannerListView(generics.ListAPIView):
+    queryset =Banner
+    serializer_class = BannerSerializer
+    
 
 class ProducListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()

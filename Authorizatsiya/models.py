@@ -28,7 +28,6 @@ class User(AbstractUser):
     username = None
     first_name = None
     last_name = None
-
     phone = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=100)
     birthdate = models.DateField()

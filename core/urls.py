@@ -5,7 +5,8 @@ from Authorizatsiya.views import *
 from Product.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),  # DRF Router
      path('api/get-otp/', telefon_raqam_uchun_code_genaratsiya, name='get_otp'),
     path('api/send-otp/', registratsiya, name='send_otp'),  # OTP yuborish endpointi
     path('api/verify-otp/', login, name='verify_otp'),
@@ -42,5 +43,11 @@ urlpatterns = [
     path("order-additional-items/", OrderAdditionalItemListCreateView.as_view()),
     path("order-additional-items/<int:pk>/", OrderAdditionalItemRetrieveUpdateDeleteView.as_view()),
 
-    
+    # Address API
+    path('api/address/create/', AdressUserCreateView.as_view(), name='address-create'),
+    path('api/address/list/', AdressUserListView.as_view(), name='address-list'),
+    path("api/adresses_of_user/",AdressesOfUsersViewSet.as_view(),name="adresses_of_user"),
+
+    # Including router URLs
+    path('api/', include(router.urls)),
 ]

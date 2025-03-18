@@ -6,7 +6,7 @@ class AdressesOfUsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adresses_of_users
         fields = '__all__'
-        
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -25,4 +25,4 @@ class ContactsSerializer(serializers.ModelSerializer):
 class FilialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = filials
-        fields = ['id', 'coordinates', 'name', 'city', 'adress', 'phone']
+        fields = ['id', 'name', 'city', 'adress', 'phone','x_coordinate','y_coordinate']

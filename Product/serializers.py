@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Order, OrderItem, OrderAdditionalItem, ProductPrice, AdditionalProduct, Product,Banner
+from .models import Order, OrderItem, OrderAdditionalItem, ProductPrice, AdditionalProduct, Product, Banner, Category
 
 
 
@@ -7,6 +7,13 @@ class BannerSerializer(serializers.Serializer):
     class Meta:
         model = Banner
         fields = '__all__'
+
+
+class CategorySerializer(serializers.Serializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+        
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

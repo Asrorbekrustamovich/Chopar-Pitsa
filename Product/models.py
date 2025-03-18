@@ -13,8 +13,20 @@ class BaseModel(models.Model):
     def __str__(self):
         return self.name
 
+
 class Banner(BaseModel):
     image = models.ImageField()
+
+    def __str__(self):
+        return self.name
+
+
+class Category(BaseModel):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 
 
 class Product(BaseModel):

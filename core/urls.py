@@ -41,7 +41,10 @@ urlpatterns = [
 
     # Banner
     path('banner/', BannerListView.as_view()),
-    
+
+    #category
+    path('category/', CategoryListAPIView.as_view()),
+
     # Orders
     path("orders/", OrderListCreateView.as_view()),
     path("orders/<int:pk>/", OrderRetrieveUpdateDeleteView.as_view()),

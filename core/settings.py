@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'Product',
     'drf_yasg'
 ]
+
 AUTH_USER_MODEL = "Authorizatsiya.User"
 
 MIDDLEWARE = [

@@ -131,7 +131,7 @@ class ContactsDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Filials Views
-class FilialsListCreateView(generics.ListCreateAPIView):
+class FilialsListCreateView(generics.CreateAPIView):
     queryset = filials.objects.all()
     serializer_class = FilialsSerializer
 

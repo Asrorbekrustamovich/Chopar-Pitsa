@@ -38,6 +38,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ['id', 'product_price', 'quantity', 'additional_items']
 
+    def validate_quantity(self, value):
+        """Buyurtma mahsulotining miqdori 1 dan kam bo'lmasligi kerak"""
+        if value < 1:
+            raise serializers.ValidationError("Mahsulot miqdori kamida 1 bo'lishi kerak.")
+        return value
 
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)  

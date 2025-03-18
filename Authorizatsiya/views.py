@@ -18,6 +18,7 @@ from rest_framework import permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
+from rest_framework.response import Response
 @csrf_exempt
 def telefon_raqam_uchun_code_genaratsiya(request):
     """Telefon raqam bo‘yicha OTP kod yaratish va cache'ga saqlash"""
@@ -112,14 +113,13 @@ class AdressUserListView(generics.ListAPIView):
 
 class AdressesOfUsersViewSet(viewsets.ModelViewSet):
     serializer_class = AdressesOfUsersSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Faqat login bo'lganlar
-    
+    permission_classes = [permissions.IsAuthenticated]  # Faqat login qilganlar foydalanadi
+
     def get_queryset(self):
-        return Adresses_of_users.objects.filter(user=self.request.user)  # Faqat o‘ziga tegishli
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-# Contacts Views
+        """Foydalanuvchining faqat o‘ziga tegishli manzillarini qaytarish"""
+        return Adresses_of_users.objects.filter(user=self.request.user)
+
+        
 class ContactsListCreateView(generics.ListCreateAPIView):
     queryset = Contacts.objects.all()
     serializer_class = ContactsSerializer

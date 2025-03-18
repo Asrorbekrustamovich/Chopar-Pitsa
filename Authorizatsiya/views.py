@@ -36,7 +36,7 @@ def telefon_raqam_uchun_code_genaratsiya(request):
 
         return JsonResponse({'otp': otp, 'message': 'OTP generated and cached successfully.'})
 
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+    return JsonResponse({'error': 'Invalid request method..'}, status=405)
 
 @csrf_exempt
 def registratsiya(request):

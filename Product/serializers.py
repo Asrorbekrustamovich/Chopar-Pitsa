@@ -45,6 +45,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         return value
 
 class OrderSerializer(serializers.ModelSerializer):
+
     user = serializers.StringRelatedField(read_only=True)
 
     items = OrderItemSerializer(many=True, read_only=True)  

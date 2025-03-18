@@ -7,18 +7,7 @@ from Product.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
      path('api/get-otp/', telefon_raqam_uchun_code_genaratsiya, name='get_otp'),
-    path('api/send-otp/', registratsiya, name='send_otp'),  # OTP yuborish endpointi
-    path('api/verify-otp/', login, name='verify_otp'),
-     path('api/cities/', CityListCreateView.as_view(), name='city-list-create'),
-    path('api/cities/<int:pk>/', CityDetailView.as_view(), name='city-detail'),
-
-    # Delivery Type
-    path('api/delivery-types/', DeliveryTypeListCreateView.as_view(), name='delivery-type-list-create'),
-    path('api/delivery-types/<int:pk>/', DeliveryTypeDetailView.as_view(), name='delivery-type-detail'),
-
-    # Address for Delivery
-    path('api/addresses/', AddressForDeliveryListCreateView.as_view(), name='address-list-create'),
-    path('api/addresses/<int:pk>/', AddressForDeliveryDetailView.as_view(), name='address-detail'),
+    path('api/send-otp/',authenticate_user , name='send_otp'),
 
     # Contacts
     path('api/contacts/', ContactsListCreateView.as_view(), name='contacts-list-create'),

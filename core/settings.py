@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-w!qq)!p*$exibs=#$1*3+br56r@+aobtr(xl71mizzklx5%dln
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CACHES = {
     'default': {

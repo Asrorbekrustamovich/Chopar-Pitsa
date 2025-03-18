@@ -31,7 +31,6 @@ class User(AbstractUser):
     phone = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=100)
     birthdate = models.DateField()
-
     groups = models.ManyToManyField(
         "auth.Group",
         related_name="custom_user_set",
@@ -51,23 +50,21 @@ class User(AbstractUser):
     def __str__(self):
         return self.name
 
-class City(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-
-class Delivery_type(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-    
-class Adress_for_delivery(models.Model):
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+class AdressUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+    city=models.CharField(max_length=100)
+    x_coordinate = models.CharField(max_length=100)
+    y_coordinate = models.CharField(max_length=100)
     street = models.CharField(max_length=100)
     house = models.CharField(max_length=100)
     flat = models.CharField(max_length=100)
     def __str__(self):
         return self.street+" "+self.house+" "+self.flat
+
+class Adresses_of_users(models.Model):
+    adreses=models.ManyToManyField(AdressUser)
+    def __str__(self):
+        return self.adreses
 
 class Contacts(models.Model):
     name = models.CharField(max_length=100)
@@ -79,9 +76,10 @@ class Contacts(models.Model):
     def __str__(self):
         return self.name
 class filials(models.Model):
-    coordinates = models.CharField(max_length=100)
+    x_coordinate = models.CharField(max_length=100)
+    y_coordinate = models.CharField(max_length=100)
     name=models.CharField(max_length=100)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    city = models.TextField()
     adress = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
     def __str__(self):

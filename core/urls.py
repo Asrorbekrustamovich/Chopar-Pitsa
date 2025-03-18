@@ -30,17 +30,18 @@ urlpatterns = [
 
     
     # Product urls
+    path('product/', ProducListCreateView.as_view()),
       # Orders
-    path("orders/", OrderListCreateView.as_view(), name="order-list-create"),
-    path("orders/<int:pk>/", OrderRetrieveUpdateDeleteView.as_view(), name="order-detail"),
+    path("orders/", OrderListCreateView.as_view()),
+    path("orders/<int:pk>/", OrderRetrieveUpdateDeleteView.as_view()),
 
     # Order Items
-    path("order-items/", OrderItemListCreateView.as_view(), name="order-item-list-create"),
-    path("order-items/<int:pk>/", OrderItemRetrieveUpdateDeleteView.as_view(), name="order-item-detail"),
+    path("order-items/", OrderItemListCreateView.as_view()),
+    path("order-items/<int:pk>/", OrderItemRetrieveUpdateDeleteView.as_view()),
 
     # Order Additional Items
-    path("order-additional-items/", OrderAdditionalItemListCreateView.as_view(), name="order-additional-item-list-create"),
-    path("order-additional-items/<int:pk>/", OrderAdditionalItemRetrieveUpdateDeleteView.as_view(), name="order-additional-item-detail"),
+    path("order-additional-items/", OrderAdditionalItemListCreateView.as_view()),
+    path("order-additional-items/<int:pk>/", OrderAdditionalItemRetrieveUpdateDeleteView.as_view()),
 
     
 ]

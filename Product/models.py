@@ -1,5 +1,5 @@
 from django.db import models
-
+from Authorizatsiya.models import *
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # Faqat yaratilganda vaqtni saqlaydi
@@ -42,7 +42,19 @@ class AdditionalProduct(BaseModel):
     def __str__(self):
         return self.name
 
-
 class OrderProduct(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    additionalProduct=models.ForeignKey(AdditionalProduct, on_delete=models.CASCADE,null=True, blank=True)
+
+
+class Order(BaseModel):
+    customer_name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    address = models.ForeignKey(Adress_for_delivery, on_delete=models.CASCADE)
+    address_for_take_it=models.ForeignKey(filials, on_delete=models.CASCADE)
+    total_price = models.IntegerField()
+    products = models.ManyToManyField(OrderProduct, related_name="orders")
+
+    def __str__(self):
+        return f"Order {self.id} - {self.customer_name}"
       

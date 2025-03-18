@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from .models import User, Contacts, filials,AdressUser
+from .models import Adresses_of_users
 
+class AdressesOfUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Adresses_of_users
+        fields = '__all__'
+        
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

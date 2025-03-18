@@ -6,8 +6,8 @@ from .models import User
 import random
 from datetime import date
 from rest_framework import viewsets
-from .models import User, Contacts, filials,AdressUser
-from .serializers import UserSerializer, ContactsSerializer, FilialsSerializer,AdressUserSerializer
+from .models import User, Contacts, filials,AdressUser,Adresses_of_users
+from .serializers import UserSerializer, ContactsSerializer, FilialsSerializer,AdressUserSerializer,AdressesOfUsersSerializer
 import json
 from rest_framework import generics, permissions
 from .utils import generate_otp
@@ -88,7 +88,7 @@ def authenticate_user(request):
 
 class AdressUserCreateView(APIView):
     """Foydalanuvchi o'z manzilini qo'shishi uchun API"""
-    permission_classes = [permissions.IsAuthenticated]  # Faqat login qilingan foydalanuvchilar
+    permission_classes = [permissions.IsAuthenticated]  
 
     def post(self, request):
         data = JSONParser().parse(request)  # JSON ma'lumotlarni o‘qish
@@ -100,14 +100,25 @@ class AdressUserCreateView(APIView):
         
         return JsonResponse(serializer.errors, status=400)
 
+
 class AdressUserListView(generics.ListAPIView):
     """Foydalanuvchining barcha manzillarini olish API"""
     serializer_class = AdressUserSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Faqat login qilingan foydalanuvchilar
+    permission_classes = [permissions.IsAuthenticated]  
 
     def get_queryset(self):
         return AdressUser.objects.filter(user=self.request.user)
     
+
+class AdressesOfUsersViewSet(viewsets.ModelViewSet):
+    serializer_class = AdressesOfUsersSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Faqat login bo'lganlar
+    
+    def get_queryset(self):
+        return Adresses_of_users.objects.filter(user=self.request.user)  # Faqat o‘ziga tegishli
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 # Contacts Views
 class ContactsListCreateView(generics.ListCreateAPIView):
     queryset = Contacts.objects.all()

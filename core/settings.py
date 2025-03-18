@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'Authorizatsiya',
     'Product',
+    'drf_yasg'
 ]
 AUTH_USER_MODEL = "Authorizatsiya.User"
 

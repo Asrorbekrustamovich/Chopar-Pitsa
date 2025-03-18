@@ -31,11 +31,9 @@ urlpatterns = [
 
     # Contacts
     path('api/contacts/', ContactsListCreateView.as_view(), name='contacts-list-create'),
-    path('api/contacts/<int:pk>/', ContactsDetailView.as_view(), name='contacts-detail'),
 
     # Filials
     path('api/filials/', FilialsListCreateView.as_view(), name='filials-list-create'),
-    path('api/filials/<int:pk>/', FilialsDetailView.as_view(), name='filials-detail'),
 
     # Product
     path('product/', ProducListCreateView.as_view()),
@@ -54,6 +52,7 @@ urlpatterns = [
     # Address API
     path('api/address/create/', AdressUserCreateView.as_view(), name='address-create'),
     path('api/address/list/', AdressUserListView.as_view(), name='address-list'),
+    path("api/adresses_of_user/",AdressesOfUsersViewSet.as_view(),name="adresses_of_user"),
 
     # Including router URLs
     path('api/', include(router.urls)),

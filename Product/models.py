@@ -2,7 +2,6 @@ from django.db import models
 from Authorizatsiya.models import User
 
 
-
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # Faqat yaratilganda vaqtni saqlaydi
     updated_at = models.DateTimeField(auto_now=True)  # Har o'zgartirilganda yangilanadi
@@ -43,6 +42,7 @@ class AdditionalProduct(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 class Order(BaseModel):
     STATUS_CHOICES = [

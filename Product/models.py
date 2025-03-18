@@ -47,14 +47,4 @@ class OrderProduct(BaseModel):
     additionalProduct=models.ForeignKey(AdditionalProduct, on_delete=models.CASCADE,null=True, blank=True)
 
 
-class Order(BaseModel):
-    customer_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
-    address = models.ForeignKey(Adress_for_delivery, on_delete=models.CASCADE)
-    address_for_take_it=models.ForeignKey(filials, on_delete=models.CASCADE)
-    total_price = models.IntegerField()
-    products = models.ManyToManyField(OrderProduct, related_name="orders")
-
-    def __str__(self):
-        return f"Order {self.id} - {self.customer_name}"
       

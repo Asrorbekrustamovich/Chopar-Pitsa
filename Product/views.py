@@ -2,8 +2,15 @@ from django.shortcuts import render
 
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from .models import Order, OrderItem, OrderAdditionalItem
-from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalItemSerializer
+from .models import Order, OrderItem, OrderAdditionalItem, Product
+from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalItemSerializer,ProductSerializer
+
+
+class ProducListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAdminUser]
+
 
 
 class OrderListCreateView(generics.ListCreateAPIView):

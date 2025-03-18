@@ -44,7 +44,6 @@ class AdditionalProduct(BaseModel):
 
 class OrderProduct(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    additionalProduct=models.ForeignKey(AdditionalProduct, on_delete=models.CASCADE,null=True, blank=True)
 
 
       

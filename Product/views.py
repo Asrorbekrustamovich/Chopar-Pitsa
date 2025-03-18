@@ -9,7 +9,6 @@ from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalIt
 class ProducListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 
@@ -41,21 +40,6 @@ class OrderRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
-class OrderItemListCreateView(generics.ListCreateAPIView):
-  
-    # Buyurtmaga mahsulot qo'shish va ko'rish API
- 
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        # Admin barcha buyurtma mahsulotlarini ko'rishi mumkin, oddiy user faqat o'z buyurtmalarini ko'radi
-        user = self.request.user
-        if user.is_staff:
-            return OrderItem.objects.all()
-        return OrderItem.objects.filter(order__user=user)
 
 
 class OrderItemRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

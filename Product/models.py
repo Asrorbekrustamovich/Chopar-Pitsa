@@ -3,8 +3,8 @@ from Authorizatsiya.models import User
 
 
 class BaseModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)  # Faqat yaratilganda vaqtni saqlaydi
-    updated_at = models.DateTimeField(auto_now=True)  # Har o'zgartirilganda yangilanadi
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)  
 
     class Meta:
         abstract = True

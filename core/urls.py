@@ -39,6 +39,9 @@ urlpatterns = [
     # Product
     path('product/', ProducListCreateView.as_view()),
 
+    # Banner
+    path('banner/', BannerListView.as_view()),
+    
     # Orders
     path("orders/", OrderListCreateView.as_view()),
     path("orders/<int:pk>/", OrderRetrieveUpdateDeleteView.as_view()),

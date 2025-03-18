@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import Order, OrderItem, OrderAdditionalItem, ProductPrice, AdditionalProduct, Product
+from .models import Order, OrderItem, OrderAdditionalItem, ProductPrice, AdditionalProduct, Product,Banner
 
+
+
+class BannerSerializer(serializers.Serializer):
+    class Meta:
+        model = Banner
+        fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

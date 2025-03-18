@@ -19,10 +19,10 @@ from django.urls import path
 from Authorizatsiya.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('api/get-otp/', telefon_raqam_uchun_code_genaratsiya, name='get_otp'),
+    path('api/get-otp/', telefon_raqam_uchun_code_genaratsiya, name='get_otp'),
     path('api/send-otp/', registratsiya, name='send_otp'),  # OTP yuborish endpointi
     path('api/verify-otp/', login, name='verify_otp'),
-     path('api/cities/', CityListCreateView.as_view(), name='city-list-create'),
+    path('api/cities/', CityListCreateView.as_view(), name='city-list-create'),
     path('api/cities/<int:pk>/', CityDetailView.as_view(), name='city-detail'),
 
     # Delivery Type

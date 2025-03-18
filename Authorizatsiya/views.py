@@ -6,8 +6,8 @@ from .models import User
 import random
 from datetime import date
 from rest_framework import viewsets
-from .models import User, City, Delivery_type, Adress_for_delivery, Contacts, filials
-from .serializers import UserSerializer, CitySerializer, DeliveryTypeSerializer, AddressForDeliverySerializer, ContactsSerializer, FilialsSerializer
+from .models import User, Contacts, filials,AdressUser
+from .serializers import UserSerializer, ContactsSerializer, FilialsSerializer,AdressUserSerializer
 import json
 from rest_framework import generics, permissions
 from .utils import generate_otp
@@ -15,7 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework import permissions
-
+from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
 @csrf_exempt
 def telefon_raqam_uchun_code_genaratsiya(request):
     """Telefon raqam bo‘yicha OTP kod yaratish va cache'ga saqlash"""
@@ -38,125 +40,78 @@ def telefon_raqam_uchun_code_genaratsiya(request):
 
     return JsonResponse({'error': 'Invalid request method..'}, status=405)
 
-@csrf_exempt
-def registratsiya(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)  # JSON ma'lumotlarni o‘qish
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
 
-        phone = data.get('phone')
-        name = data.get('name')
-        birthdate = data.get('birthdate')
-        code = data.get('code')  # Foydalanuvchi kiritgan OTP
-
-        if not phone:
-            return JsonResponse({'error': 'Phone number is required.'}, status=400)
-
-        user = User.objects.filter(phone=phone).first()
-
-        if user:
-            return JsonResponse({'error': 'User is already registered. Please log in.'}, status=400)
-
-        if not name or not birthdate:
-            return JsonResponse({'error': 'Name and birthdate are required for first-time registration.'}, status=400)
-
-        cached_otp = cache.get(phone)  # Cache'dan OTP ni olish
-        if not cached_otp:
-            return JsonResponse({'error': 'OTP expired or not found. Please request a new one.'}, status=400)
-
-        if code != cached_otp:
-            return JsonResponse({'error': 'Invalid OTP. Please try again.'}, status=400)
-
-        # Yangi foydalanuvchini yaratish
-        user = User.objects.create(
-            phone=phone,
-            name=name,
-            birthdate=birthdate
-        )
-
-        refresh = RefreshToken.for_user(user)
-        token = str(refresh.access_token)
-
-        return JsonResponse({'message': 'User registered successfully.', 'token': token})
-
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+User = get_user_model()
 
 @csrf_exempt
-def login(request):
-    """Telefon raqami va OTP orqali foydalanuvchini tekshirish va token qaytarish"""
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)  # JSON formatda kelgan ma'lumotlarni o‘qish
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
+def authenticate_user(request):
+    """Foydalanuvchini ro‘yxatdan o‘tkazish yoki tizimga kiritish"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-        phone = data.get('phone')
-        otp_entered = data.get('otp')
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
 
-        if not phone or not otp_entered:
-            return JsonResponse({'error': 'Phone and OTP are required.'}, status=400)
+    phone = data.get('phone')
+    code = data.get('code')
 
-        otp_cached = cache.get(phone)  # Cache'dan OTP ni olish
+    if not phone or not code:
+        return JsonResponse({'error': 'Phone and OTP are required.'}, status=400)
 
-
-        if otp_cached and otp_cached == otp_entered:
-            user = User.objects.filter(phone=phone).first()  # Foydalanuvchini topish
-
-            if not user:
-                return JsonResponse({'error': 'User not found.'}, status=404)
-
-            # Token yaratish
-            refresh = RefreshToken.for_user(user)  
-            token = str(refresh.access_token)
-
-            return JsonResponse({'message': 'Login successful.', 'token': token})
-
+    cached_otp = cache.get(phone)
+    if not cached_otp or cached_otp != code:
         return JsonResponse({'error': 'Invalid OTP or OTP expired.'}, status=400)
 
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+    user = User.objects.filter(phone=phone).first()
 
-class CityListCreateView(generics.ListCreateAPIView):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-    permission_classes = [permissions.IsAuthenticated]  # Requires authentication
+    if user:
+        # Agar user allaqachon mavjud bo‘lsa, faqat login qilinadi
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({'message': 'Login successful.', 'token': str(refresh.access_token)})
+    
+    # Agar user mavjud bo‘lmasa, ro‘yxatdan o‘tish uchun qo‘shimcha maydonlar tekshiriladi
+    name = data.get('name')
+    birthdate = data.get('birthdate')
 
-class CityDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-    permission_classes = [permissions.IsAuthenticated]  # Requires authentication
+    if not name or not birthdate:
+        return JsonResponse({'error': 'Name and birthdate are required for first-time registration.'}, status=400)
 
+    # Yangi foydalanuvchini yaratish
+    user = User.objects.create(phone=phone, name=name, birthdate=birthdate)
 
-# Delivery Type Views
-class DeliveryTypeListCreateView(generics.ListCreateAPIView):
-    queryset = Delivery_type.objects.all()
-    serializer_class = DeliveryTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class DeliveryTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Delivery_type.objects.all()
-    serializer_class = DeliveryTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    refresh = RefreshToken.for_user(user)
+    return JsonResponse({'message': 'User registered successfully.', 'token': str(refresh.access_token)})
 
 
-# Address for Delivery Views
-class AddressForDeliveryListCreateView(generics.ListCreateAPIView):
-    queryset = Adress_for_delivery.objects.all()
-    serializer_class = AddressForDeliverySerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-class AddressForDeliveryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Adress_for_delivery.objects.all()
-    serializer_class = AddressForDeliverySerializer
-    permission_classes = [permissions.IsAuthenticated]
+class AdressUserCreateView(APIView):
+    """Foydalanuvchi o'z manzilini qo'shishi uchun API"""
+    permission_classes = [permissions.IsAuthenticated]  # Faqat login qilingan foydalanuvchilar
 
+    def post(self, request):
+        data = JSONParser().parse(request)  # JSON ma'lumotlarni o‘qish
+        serializer = AdressUserSerializer(data=data)
+        
+        if serializer.is_valid():
+            serializer.save(user=request.user)  # Foydalanuvchini token orqali olamiz
+            return JsonResponse(serializer.data, status=201)
+        
+        return JsonResponse(serializer.errors, status=400)
 
+class AdressUserListView(generics.ListAPIView):
+    """Foydalanuvchining barcha manzillarini olish API"""
+    serializer_class = AdressUserSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Faqat login qilingan foydalanuvchilar
+
+    def get_queryset(self):
+        return AdressUser.objects.filter(user=self.request.user)
+    
 # Contacts Views
 class ContactsListCreateView(generics.ListCreateAPIView):
     queryset = Contacts.objects.all()
     serializer_class = ContactsSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class ContactsDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contacts.objects.all()
@@ -168,7 +123,6 @@ class ContactsDetailView(generics.RetrieveUpdateDestroyAPIView):
 class FilialsListCreateView(generics.ListCreateAPIView):
     queryset = filials.objects.all()
     serializer_class = FilialsSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class FilialsDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = filials.objects.all()

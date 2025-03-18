@@ -9,7 +9,7 @@ from .serializers import OrderSerializer, OrderItemSerializer, OrderAdditionalIt
 class ProducListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 

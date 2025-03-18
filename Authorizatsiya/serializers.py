@@ -1,25 +1,15 @@
 from rest_framework import serializers
-from .models import User, City, Delivery_type, Adress_for_delivery, Contacts, filials
+from .models import User, Contacts, filials,AdressUser
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'phone', 'name', 'birthdate']
 
-class CitySerializer(serializers.ModelSerializer):
+class AdressUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = City
-        fields = ['id', 'name']
-
-class DeliveryTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Delivery_type
-        fields = ['id', 'name']
-
-class AddressForDeliverySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Adress_for_delivery
-        fields = ['id', 'city', 'street', 'house', 'flat']
+        model = AdressUser
+        fields = ['id', 'city', 'x_coordinate', 'y_coordinate', 'street', 'house', 'flat']
 
 class ContactsSerializer(serializers.ModelSerializer):
     class Meta:

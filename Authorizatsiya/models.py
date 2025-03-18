@@ -63,8 +63,10 @@ class AdressUser(models.Model):
 
 class Adresses_of_users(models.Model):
     adreses=models.ManyToManyField(AdressUser)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="adresses_of_user")
     def __str__(self):
-        return self.adreses
+        return f"{self.user.username} - {self.adreses.count()} addresses"
+
 
 class Contacts(models.Model):
     name = models.CharField(max_length=100)
